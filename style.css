@@ -1,0 +1,324 @@
+/* style.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f06d06, #f7ce44); /* Modern gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure it takes full viewport height */
+    color: #333;
+    overflow-y: auto; /* Allow scrolling if content overflows, though we aim to avoid it */
+}
+
+.quiz-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    max-width: 700px;
+    width: 90%; /* Use percentage for responsiveness */
+    /* Removed fixed height if any was set previously */
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Keep overflow hidden for animations */
+    transform: scale(0.95);
+    animation: fadeInScale 0.8s ease-out forwards;
+    box-sizing: border-box; /* Include padding in width/height calculation */
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.quiz-title {
+    color: #e65100;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+#quiz-body {
+    position: relative;
+    /* Remove min-height or reduce it if still causing issues, let content define height */
+    min-height: auto; /* Or even remove this property */
+    padding-bottom: 20px; /* Ensure space at bottom for feedback/next button */
+}
+
+.question-slide, .results-slide {
+    position: relative; /* Change from absolute to relative for natural flow if needed, but absolute is fine for transitions */
+    /* If using absolute, ensure parent #quiz-body has a defined height or min-height */
+    width: 100%;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    backface-visibility: hidden;
+    padding-bottom: 70px; /* Add padding to make space for the next button */
+    box-sizing: border-box;
+}
+
+.question-slide.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    position: absolute; /* Keep absolute for off-screen positioning */
+    pointer-events: none;
+}
+
+.results-slide.hidden {
+    transform: translateX(100%);
+    opacity: 0;
+    position: absolute; /* Keep absolute for off-screen positioning */
+    pointer-events: none;
+}
+
+.question-slide.active, .results-slide.active {
+    transform: translateX(0);
+    opacity: 1;
+    position: relative; /* Make active slide relative to allow natural content flow */
+    /* You might need to adjust min-height on #quiz-body or here if content pushes out */
+}
+
+
+#question-number {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+#question-text {
+    font-size: 1.6em;
+    margin-bottom: 30px;
+    color: #444;
+    font-weight: 600;
+    line-height: 1.5; /* Improve readability for longer questions */
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.btn {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    white-space: normal; /* Allow text to wrap within the button */
+    text-align: center;
+    line-height: 1.3;
+}
+
+.btn:hover:not(.correct):not(.incorrect) {
+    background-color: #e68900;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn.correct {
+    background-color: #4CAF50;
+    color: white;
+    animation: pulseCorrect 0.7s ease-out forwards;
+    pointer-events: none;
+}
+
+.btn.incorrect {
+    background-color: #f44336;
+    color: white;
+    animation: shakeIncorrect 0.5s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes pulseCorrect {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shakeIncorrect {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.feedback {
+    font-size: 1.1em;
+    margin-top: 15px;
+    min-height: 25px;
+    font-weight: 600;
+    text-align: center; /* Ensure feedback is centered */
+}
+
+.feedback.correct {
+    color: #2e7d32;
+}
+
+.feedback.incorrect {
+    color: #d32f2f;
+}
+
+.next-btn {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    /* Animation for visibility controlled by JS class `active` on the button itself */
+    animation: none; /* Remove initial animation from CSS */
+}
+
+/* New CSS rule for showing next button */
+.next-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    animation: slideUpFadeIn 0.5s forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes slideUpFadeIn {
+    to {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+}
+
+.next-btn:hover {
+    background-color: #1565c0;
+    transform: translateY(-2px);
+}
+
+.next-btn:active {
+    transform: translateY(0);
+}
+
+#results-container {
+    padding: 20px;
+}
+
+#results-container h2 {
+    color: #e65100;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+#final-score, #total-questions {
+    font-weight: bold;
+    color: #28a745;
+}
+
+#previous-scores {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto; /* Center list */
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    text-align: left;
+    width: 90%; /* Make list narrower than container to look better */
+    max-width: 400px;
+}
+
+#previous-scores li {
+    padding: 10px 15px;
+    border-bottom: 1px dashed #eee;
+    font-size: 0.95em;
+    color: #555;
+}
+
+#previous-scores li:last-child {
+    border-bottom: none;
+}
+
+.restart-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+}
+
+.restart-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .quiz-container {
+        padding: 30px;
+    }
+    .quiz-title {
+        font-size: 2em;
+    }
+    #question-text {
+        font-size: 1.4em;
+    }
+    .btn {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    .next-btn, .restart-btn {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-container {
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .quiz-title {
+        font-size: 1.8em;
+    }
+    #question-text {
+        font-size: 1.2em;
+    }
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    .next-btn, .restart-btn {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    #previous-scores {
+        width: 100%; /* Take full width on small screens */
+        max-width: none;
+    }
+}

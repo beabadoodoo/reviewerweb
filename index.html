@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript and Web Concepts Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <h1 class="quiz-title">JavaScript and Web Concepts Quiz</h1>
+        <div id="quiz-body">
+            <div id="question-container" class="question-slide">
+                <h2 id="question-number"></h2>
+                <p id="question-text"></p>
+                <div id="answer-buttons" class="btn-grid">
+                    <button class="btn" onclick="selectAnswer(this)">Answer 1</button>
+                    <button class="btn" onclick="selectAnswer(this)">Answer 2</button>
+                    <button class="btn" onclick="selectAnswer(this)">Answer 3</button>
+                    <button class="btn" onclick="selectAnswer(this)">Answer 4</button>
+                </div>
+                <div id="feedback" class="feedback"></div>
+                <button id="next-button" class="next-btn" onclick="nextQuestion()">Next</button>
+            </div>
+            <div id="results-container" class="results-slide">
+                <h2>Quiz Completed!</h2>
+                <p>Your final score is: <span id="final-score"></span> / <span id="total-questions"></span></p>
+                <h3>Previous Scores:</h3>
+                <ul id="previous-scores"></ul>
+                <button class="restart-btn" onclick="startQuiz()">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
